@@ -7,6 +7,12 @@ class Sort():
         self.size = len(unsorted)
         self.steps = [self.data.copy()]
 
+    def swap(self, i, j):
+        temp = self.data[i]
+        self.data[i] = self.data[j]
+        self.data[j] = temp
+        
+
 class Bubble(Sort):
     def __init__(self, unsorted):
         super().__init__(unsorted)
@@ -15,7 +21,35 @@ class Bubble(Sort):
         for i in range(self.size):
             for j in range(self.size - 1):
                 if self.data[j] > self.data[j + 1]:
-                    temp = self.data[j]
-                    self.data[j] = self.data[j + 1]
-                    self.data[j + 1] = temp
+                    self.swap(j, j + 1)
                     self.steps.append(self.data.copy())
+
+class Quick(Sort):
+    def __init__(self, unsorted):
+        super().__init__(unsorted)
+
+    def partition(self, lo, hi):
+        pivot = self.data[hi]
+
+        i = lo - 1
+
+        for j in range(lo, hi):
+            if self.data[j] <= pivot:
+                i += 1
+                self.swap(i, j)
+                self.steps.append(self.data.copy())
+        
+        i += 1
+        self.swap(i, hi)
+        self.steps.append(self.data.copy())
+        return i
+
+
+    def sort(self, lo, hi):
+        if lo >= hi or lo < 0:
+            return
+        p = self.partition(lo, hi)
+
+        self.sort(lo, p - 1)
+        self.sort(p + 1, hi)
+
