@@ -5,47 +5,56 @@ from PyQt5 import QtCore, QtWidgets
 import pyqtgraph as pg
 import numpy as np
 
-size = 100
-dat = data.DataClass(size)
-le = [i for i in range(size)]
-alg = sort.Bubble(dat.unsorted)
-alg.sort()
+algs = ["Quick", "Bubble"]
 
-class MyWidget(pg.GraphicsWindow):
+size = 500
+points = data.DataClass(size)
+x = [i for i in range(size)]
+result = {}
 
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
-
-        self.mainLayout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.mainLayout)
+for alg in algs:
+    a = 1
+    if alg == "Quick":
+        a = sort.Quick(points.unsorted)
+        a.sort(0, size - 1)
+    elif alg == "Bubble":
+        a = sort.Bubble(points.unsorted)
+        a.sort()
         
-        self.counter = 0
-        self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(1) # in milliseconds
-        self.timer.start()
-        self.timer.timeout.connect(self.onNewData)
+    result[alg] = a.steps
 
-        self.plotItem = self.addPlot(title="Bubble")
+pg.setConfigOptions(antialias = True)
+pg.setConfigOptions(background = 'lightgray')
+pg.setConfigOptions(foreground = 'darkred')
 
-        self.plotDataItem = self.plotItem.plot([], pen=None, 
-            symbolBrush=(255,0,0), symbolSize=5, symbolPen=None)
+win = pg.GraphicsLayoutWidget(title = "Sort Visualizer", show = True)
+win.resize(3840, 1600)
 
 
-    def setData(self, x, y):
-        self.plotDataItem.setData(x, y)
+ps = {}
+bgs = {}
+for alg in algs:
+    ps[alg] = win.addPlot()
+    ps[alg].setTitle(alg)
+    ps[alg].hideAxis("bottom")
+    ps[alg].hideAxis("left")
+    bgs[alg] = pg.BarGraphItem(x = x, height = points.unsorted, 
+                width = 0.3, brush = 'darkblue')
+    ps[alg].addItem(bgs[alg])    
+
+### Loop with timer
+counter = 0
+timer = pg.QtCore.QTimer()
+def update_plots():
+    global counter
+    for alg in algs:
+        if not counter >= len(result[alg]):
+            bgs[alg].setOpts(height = result[alg][counter])
+    counter += 1
+
+timer.timeout.connect(update_plots)
+timer.start(0)
 
 
-    def onNewData(self):
-        x = le
-        y = alg.steps[self.counter]
-        self.counter += 1 
-        self.setData(x, y)
-
-app = QtWidgets.QApplication([])
-pg.setConfigOptions(antialias=False)
-
-win = MyWidget()
-win.show()
-win.resize(800, 800)
-win.raise_()
-app.exec_()
+if __name__ == '__main__':
+    pg.exec()
