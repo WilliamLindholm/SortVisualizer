@@ -37,6 +37,21 @@ class Insertion(Sort):
                 j -= 1
             i += 1
 
+class Selection(Sort):
+    def __init__(self, unsorted):
+        super().__init__(unsorted)
+
+    def sort(self):
+        for i in range(self.size - 1):
+            jMin = i
+            for j in range(i + 1, self.size):
+                if self.data[j] < self.data[jMin]:
+                    jMin = j
+            if jMin != i:
+                self.swap(i, jMin)
+                self.steps.append(self.data.copy())
+
+
 class Quick(Sort):
     def __init__(self, unsorted):
         super().__init__(unsorted)

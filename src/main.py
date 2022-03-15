@@ -5,9 +5,9 @@ from PyQt5 import QtCore, QtWidgets
 import pyqtgraph as pg
 import numpy as np
 
-algs = ["Quick", "Bubble", "Insertion"]
+algs = ["Quick", "Bubble", "Insertion", "Selection"]
 
-size = 100
+size = 500
 points = data.DataClass(size)
 x = [i for i in range(size)]
 result = {}
@@ -23,7 +23,10 @@ for alg in algs:
     elif alg == "Insertion":
         a = sort.Insertion(points.unsorted)
         a.sort() 
-        
+    elif alg == "Selection":
+        a = sort.Selection(points.unsorted)
+        a.sort()
+
     result[alg] = a.steps
 
 pg.setConfigOptions(antialias = True)
