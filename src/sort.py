@@ -24,6 +24,19 @@ class Bubble(Sort):
                     self.swap(j, j + 1)
                     self.steps.append(self.data.copy())
 
+class Insertion(Sort):
+    def __init__(self, unsorted):
+        super().__init__(unsorted)
+    
+    def sort(self):
+        for i in range(self.size):
+            j = i
+            while j > 0 and self.data[j - 1] > self.data[j]:
+                self.swap(j, j - 1)
+                self.steps.append(self.data.copy())
+                j -= 1
+            i += 1
+
 class Quick(Sort):
     def __init__(self, unsorted):
         super().__init__(unsorted)

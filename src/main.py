@@ -5,9 +5,9 @@ from PyQt5 import QtCore, QtWidgets
 import pyqtgraph as pg
 import numpy as np
 
-algs = ["Quick", "Bubble"]
+algs = ["Quick", "Bubble", "Insertion"]
 
-size = 500
+size = 100
 points = data.DataClass(size)
 x = [i for i in range(size)]
 result = {}
@@ -20,6 +20,9 @@ for alg in algs:
     elif alg == "Bubble":
         a = sort.Bubble(points.unsorted)
         a.sort()
+    elif alg == "Insertion":
+        a = sort.Insertion(points.unsorted)
+        a.sort() 
         
     result[alg] = a.steps
 
