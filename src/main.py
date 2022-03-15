@@ -33,14 +33,22 @@ win.resize(3840, 1600)
 
 ps = {}
 bgs = {}
+rowbreak = len(algs) / 2 
+i = 0
 for alg in algs:
+
     ps[alg] = win.addPlot()
     ps[alg].setTitle(alg)
     ps[alg].hideAxis("bottom")
     ps[alg].hideAxis("left")
     bgs[alg] = pg.BarGraphItem(x = x, height = points.unsorted, 
                 width = 0.3, brush = 'darkblue')
-    ps[alg].addItem(bgs[alg])    
+    ps[alg].addItem(bgs[alg])
+    
+    i += 1
+    if i >= rowbreak:
+        win.nextRow()
+        i = 0
 
 ### Loop with timer
 counter = 0
